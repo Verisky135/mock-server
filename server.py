@@ -5,7 +5,7 @@ import time
 import json
 
 hostName = "0.0.0.0"
-serverPort = 8080
+serverPort = 8888
 
 class MyServer(BaseHTTPRequestHandler):
     def _set_headers(self, response_code=200):
