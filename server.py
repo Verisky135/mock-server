@@ -24,8 +24,6 @@ class MyServer(BaseHTTPRequestHandler):
 
     def do_GET(self):
         match self.path:
-            case "/":
-                self._set_headers()
             case "/application/health":
                 self._set_headers()
             case "/api":
