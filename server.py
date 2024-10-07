@@ -17,13 +17,23 @@ class MyServer(BaseHTTPRequestHandler):
         self.end_headers()
 
     def do_HEAD(self):
-        self._set_headers()
+        match self.path:
+            case "/":
+                self._set_headers()
+            case "/application/health":
+                self._set_headers()
+            case "/api":
+                self._set_headers(500)
+            case _:
+                self._set_headers(404)
 
     def do_OPTIONS(self):
         self._set_headers()
 
     def do_GET(self):
         match self.path:
+            case "/":
+                self._set_headers()
             case "/application/health":
                 self._set_headers()
             case "/api":
