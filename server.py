@@ -26,6 +26,12 @@ class MyServer(BaseHTTPRequestHandler):
         match self.path:
             case "/":
                 self._set_headers()
+            case "/application/health":
+                self._set_headers()
+            case "/api":
+                self._set_headers(500)
+            case _:
+                self._set_headers(404)
     
     def do_POST(self):
         ctype, pdict = parse_header(self.headers['content-type'])
