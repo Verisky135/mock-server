@@ -3,6 +3,7 @@ from socketserver import ThreadingMixIn
 from cgi import parse_header
 import time
 import json
+import socket
 
 hostName = "0.0.0.0"
 serverPort = 8888
@@ -38,6 +39,10 @@ class MyServer(BaseHTTPRequestHandler):
                 self._set_headers()
             case "/api":
                 self._set_headers(500)
+            case "/hostname":
+                self._set_headers(200)
+                response = "{ 'hostname' : '" + str(socket.gethostname()) + "'  }"
+                self.wfile.write(json.dumps(response).encode('utf-8'))
             case _:
                 self._set_headers(404)
     
