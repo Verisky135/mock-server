@@ -7,7 +7,7 @@ import socket
 
 hostName = "0.0.0.0"
 serverPort = 8888
-api_success_count = 5
+api_success = True
 
 class MyServer(BaseHTTPRequestHandler):
     def _set_headers(self, response_code=200):
@@ -19,21 +19,20 @@ class MyServer(BaseHTTPRequestHandler):
         self.end_headers()
 
     def do_HEAD(self):
-        global api_success_count
+        global api_success
         match self.path:
             case "/":
                 self._set_headers()
             case "/application/health":
                 self._set_headers()
             case "/api":
-                if api_success_count == 0 :
-                  self._set_headers(500)
-                else :
-                  api_success_count = api_success_count - 1
+                if api_success :
                   self._set_headers(200)
-            case "/api/reset" :
+                else :
+                  self._set_headers(500)
+            case "/api/switch" :
                 self._set_headers(200)
-                api_success_count = 5
+                api_success = not api_success
             case _:
                 self._set_headers(404)
 
@@ -41,21 +40,20 @@ class MyServer(BaseHTTPRequestHandler):
         self._set_headers()
 
     def do_GET(self):
-        global api_success_count
+        global api_success
         match self.path:
             case "/":
                 self._set_headers()
             case "/application/health":
                 self._set_headers()
             case "/api":
-                if api_success_count == 0 :
-                  self._set_headers(500)
-                else :
-                  api_success_count = api_success_count - 1
+                if api_success :
                   self._set_headers(200)
-            case "/api/reset" :
+                else :
+                  self._set_headers(500)
+            case "/api/switch" :
                 self._set_headers(200)
-                api_success_count = 5
+                api_success = not api_success
             case "/hostname":
                 self._set_headers(200)
                 response = "{ 'hostname' : '" + str(socket.gethostname()) + "'  }"
