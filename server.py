@@ -33,6 +33,7 @@ class MyServer(BaseHTTPRequestHandler):
         self._set_headers()
 
     def do_GET(self):
+        global api_success_count
         match self.path:
             case "/":
                 self._set_headers()
