@@ -10,6 +10,9 @@ serverPort = 8888
 api_success = True
 
 class MyServer(BaseHTTPRequestHandler):
+    def log_message(self, format, *args):
+        pass
+
     def _set_headers(self, response_code=200):
         self.send_response(response_code)
         self.send_header('Content-Type', 'application/json')
