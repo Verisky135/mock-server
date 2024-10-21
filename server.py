@@ -4,6 +4,7 @@ from cgi import parse_header
 import time
 import json
 import socket
+import os
 
 hostName = "0.0.0.0"
 serverPort = 8888
@@ -36,6 +37,10 @@ class MyServer(BaseHTTPRequestHandler):
             case "/api/switch" :
                 self._set_headers(200)
                 api_success = not api_success
+            case "/hostname":
+                self._set_headers(200)
+                response = "{ 'hostname' : '" + str(socket.gethostname()) + "'  }"
+                self.wfile.write(json.dumps(response).encode('utf-8'))
             case _:
                 self._set_headers(404)
 
@@ -59,7 +64,11 @@ class MyServer(BaseHTTPRequestHandler):
                 api_success = not api_success
             case "/hostname":
                 self._set_headers(200)
-                response = "{ 'hostname' : '" + str(socket.gethostname()) + "'  }"
+                response = "{ 'hostname' : '" + str(os.environ["HOME"]) + "'  }"
+                self.wfile.write(json.dumps(response).encode('utf-8'))
+            case "/env":
+                self._set_headers(200)
+                response = "{ 'app_name' : '" + str(os.environ["APP_NAME"]) + "', 'app_env' : '" + str(os.environ["APP_ENV"]) + "'}"
                 self.wfile.write(json.dumps(response).encode('utf-8'))
             case _:
                 self._set_headers(404)
