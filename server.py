@@ -64,7 +64,7 @@ class MyServer(BaseHTTPRequestHandler):
                 api_success = not api_success
             case "/hostname":
                 self._set_headers(200)
-                response = "{ 'hostname' : '" + str(os.environ["HOME"]) + "'  }"
+                response = "{ 'hostname' : '" + str(socket.gethostname()) + "'  }"
                 self.wfile.write(json.dumps(response).encode('utf-8'))
             case "/env":
                 self._set_headers(200)
