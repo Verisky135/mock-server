@@ -70,6 +70,10 @@ class MyServer(BaseHTTPRequestHandler):
                 self._set_headers(200)
                 response = "{ 'app_name' : '" + str(os.environ["APP_NAME"]) + "', 'app_env' : '" + str(os.environ["APP_ENV"]) + "'}"
                 self.wfile.write(json.dumps(response).encode('utf-8'))
+            case "/secret":
+                self._set_headers(200)
+                response = "{ 'api_key' : '" + str(os.environ["API_KEY"]) + "', 'redis_password' : '" + str(os.environ["REDIS_PASSWORD"]) + "'}"
+                self.wfile.write(json.dumps(response).encode('utf-8'))
             case _:
                 self._set_headers(404)
     
