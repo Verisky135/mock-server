@@ -99,7 +99,7 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 
 if __name__ == "__main__":
 
-    with open('mock-server.json') as f:
+    with open('/config/mock-server.json') as f:
       d = json.load(f)
       api_key = d["API_KEY"]
       redis_password =  d["REDIS_PASSWORD"]
