@@ -9,6 +9,8 @@ import os
 hostName = "0.0.0.0"
 serverPort = 8888
 api_success = True
+api_key = ""
+redis_password = ""
 
 class MyServer(BaseHTTPRequestHandler):
     def log_message(self, format, *args):
@@ -72,7 +74,9 @@ class MyServer(BaseHTTPRequestHandler):
                 self.wfile.write(json.dumps(response).encode('utf-8'))
             case "/secret":
                 self._set_headers(200)
-                response = "{ 'api_key' : '" + str(os.environ["API_KEY"]) + "', 'redis_password' : '" + str(os.environ["REDIS_PASSWORD"]) + "'}"
+                global api_key
+                global redis_password
+                response = "{ 'api_key' : '" + api_key + "', 'redis_password' : '" + redis_password + "'}"
                 self.wfile.write(json.dumps(response).encode('utf-8'))
             case _:
                 self._set_headers(404)
@@ -94,9 +98,16 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
     """Handle requests in a separate thread."""
 
 if __name__ == "__main__":
+
+    with open('mock-server.json') as f:
+      d = json.load(f)
+      api_key = d["API_KEY"]
+      redis_password =  d["REDIS_PASSWORD"]
+    
     # Start server
     webServer = ThreadedHTTPServer((hostName, serverPort), MyServer)
     print("Server started http://%s:%s" % (hostName, serverPort))
+
 
     try:
         webServer.serve_forever()
