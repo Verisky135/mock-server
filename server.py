@@ -103,6 +103,8 @@ if __name__ == "__main__":
       d = json.load(f)
       api_key = d["API_KEY"]
       redis_password =  d["REDIS_PASSWORD"]
+    except FileNotFoundError:
+      print('secret.json not found')
     
     # Start server
     webServer = ThreadedHTTPServer((hostName, serverPort), MyServer)
