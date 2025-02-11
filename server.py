@@ -99,12 +99,16 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 
 if __name__ == "__main__":
 
-    with open('/secret/secret.json') as f:
-      d = json.load(f)
-      api_key = d["API_KEY"]
-      redis_password =  d["REDIS_PASSWORD"]
+    try:
+        f = open('/secret/secret.json')
     except FileNotFoundError:
-      print('secret.json not found')
+        print('secret.json not found')
+    else:
+        with f:
+            d = json.load(f)
+            api_key = d["API_KEY"]
+            redis_password =  d["REDIS_PASSWORD"]
+      
     
     # Start server
     webServer = ThreadedHTTPServer((hostName, serverPort), MyServer)
