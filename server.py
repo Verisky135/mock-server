@@ -78,6 +78,13 @@ class MyServer(BaseHTTPRequestHandler):
                 global redis_password
                 response = "{ 'api_key' : '" + api_key + "', 'redis_password' : '" + redis_password + "'}"
                 self.wfile.write(json.dumps(response).encode('utf-8'))
+            case "/header":
+                self._set_headers(200)
+                response = {}
+                for header in self.headers :
+                  response[header] = self.headers[header]
+                self.wfile.write(json.dumps(response).encode('utf-8'))
+
             case _:
                 self._set_headers(404)
     
