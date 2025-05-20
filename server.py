@@ -5,6 +5,7 @@ import time
 import json
 import socket
 import os
+import redis
 
 hostName = "0.0.0.0"
 serverPort = 8888
