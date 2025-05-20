@@ -11,6 +11,9 @@ serverPort = 8888
 api_success = True
 api_key = ""
 redis_password = ""
+redis_host = os.environ["REDIS_HOST"]
+redis_port = os.environ["REDIS_PORT"]
+r = redis.Redis(host=redis_host, port=redis_port, decode_responses=True)
 
 class MyServer(BaseHTTPRequestHandler):
     def log_message(self, format, *args):
@@ -84,7 +87,6 @@ class MyServer(BaseHTTPRequestHandler):
                 for header in self.headers :
                   response[header] = self.headers[header]
                 self.wfile.write(json.dumps(response).encode('utf-8'))
-
             case _:
                 self._set_headers(404)
     
@@ -98,6 +100,23 @@ class MyServer(BaseHTTPRequestHandler):
                 time.sleep(sleep)
                 response = "{ 'sleep' : '" + str(sleep) + "'  }"
                 self.wfile.write(json.dumps(response).encode('utf-8'))
+            case "/redis-get":
+                try:
+                  request = json.loads(self.rfile.read(int(self.headers['Content-Length'])))
+                  key = request["key"]
+                  r.get(key)
+                  self._set_headers(200)
+                except redis.RedisError as e:
+                  self._set_headers(500)
+            case "/redis-set":
+                try:
+                  request = json.loads(self.rfile.read(int(self.headers['Content-Length'])))
+                  key = request["key"]
+                  value = request["value"]
+                  r.set(key, value)
+                  self._set_headers(200)
+                except redis.RedisError as e:
+                  self._set_headers(500)
             case _:
                 self._set_headers(404)
 
