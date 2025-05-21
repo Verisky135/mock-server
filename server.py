@@ -11,10 +11,10 @@ hostName = "0.0.0.0"
 serverPort = 8888
 api_success = True
 api_key = ""
-redis_password = ""
+redis_password = os.environ["REDIS_PASSWORD"]
 redis_host = os.environ["REDIS_HOST"]
 redis_port = os.environ["REDIS_PORT"]
-r = redis.Redis(host=redis_host, port=redis_port, decode_responses=True)
+r = redis.Redis(host=redis_host, port=redis_port, password=redis_password, decode_responses=True)
 
 class MyServer(BaseHTTPRequestHandler):
     def log_message(self, format, *args):
@@ -80,7 +80,7 @@ class MyServer(BaseHTTPRequestHandler):
                 self._set_headers(200)
                 global api_key
                 global redis_password
-                response = "{ 'api_key' : '" + api_key + "', 'redis_password' : '" + redis_password + "'}"
+                response = "{ 'api_key' : '" + api_key + "', 'redis_password' : ''}"
                 self.wfile.write(json.dumps(response).encode('utf-8'))
             case "/header":
                 self._set_headers(200)
