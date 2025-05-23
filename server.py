@@ -105,7 +105,8 @@ class MyServer(BaseHTTPRequestHandler):
                 try:
                   request = json.loads(self.rfile.read(int(self.headers['Content-Length'])))
                   key = request["key"]
-                  value = r.get(key)
+                  r2 = redis.Redis(host=redis_host, port=redis_port, password=redis_password, decode_responses=True)
+                  value = r2.get(key)
                   self._set_headers(200)
                   response = "{ 'key' : '" + key + "', 'value' : '" + str(value) + "'  }"
                   self.wfile.write(json.dumps(response).encode('utf-8'))
