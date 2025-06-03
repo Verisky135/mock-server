@@ -91,7 +91,7 @@ class MyServer(BaseHTTPRequestHandler):
             case "/load":
                 self._set_headers(200)
                 response = {}
-                for i in range(10000):
+                for i in range(100000):
                   x = 123456789 ** 0.5
                 self.wfile.write(json.dumps(response).encode('utf-8'))
             case _:
