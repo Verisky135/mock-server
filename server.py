@@ -5,16 +5,16 @@ import time
 import json
 import socket
 import os
-import redis
+# import redis
 
 hostName = "0.0.0.0"
 serverPort = 8888
 api_success = True
 api_key = ""
-redis_password = os.environ["REDIS_PASSWORD"]
-redis_host = os.environ["REDIS_HOST"]
-redis_port = os.environ["REDIS_PORT"]
-r = redis.Redis(host=redis_host, port=redis_port, password=redis_password, decode_responses=True)
+# redis_password = os.environ["REDIS_PASSWORD"]
+# redis_host = os.environ["REDIS_HOST"]
+# redis_port = os.environ["REDIS_PORT"]
+# r = redis.Redis(host=redis_host, port=redis_port, password=redis_password, decode_responses=True)
 
 class MyServer(BaseHTTPRequestHandler):
     def log_message(self, format, *args):
@@ -98,7 +98,6 @@ class MyServer(BaseHTTPRequestHandler):
                 self._set_headers(404)
     
     def do_POST(self):
-        ctype, pdict = parse_header(self.headers['content-type'])
         match self.path:
             case "/sleep": 
                 self._set_headers()
@@ -127,6 +126,11 @@ class MyServer(BaseHTTPRequestHandler):
                   self._set_headers(200)
                 except redis.RedisError as e:
                   self._set_headers(500)
+            case "/kill": 
+                self._set_headers()
+                response = "{ 'status' : 'shutting down'  }"
+                self.wfile.write(json.dumps(response).encode('utf-8'))
+                os._exit(0)
             case _:
                 self._set_headers(404)
 
@@ -135,16 +139,15 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 
 if __name__ == "__main__":
 
-    try:
-        f = open('/secret/secret.json')
-    except FileNotFoundError:
-        print('secret.json not found')
-    else:
-        with f:
-            d = json.load(f)
-            api_key = d["API_KEY"]
-            redis_password =  d["REDIS_PASSWORD"]
-      
+    # try:
+    #     f = open('/secret/secret.json')
+    # except FileNotFoundError:
+    #     print('secret.json not found')
+    # else:
+    #     with f:
+    #         d = json.load(f)
+    #         api_key = d["API_KEY"]
+    #         redis_password =  d["REDIS_PASSWORD"]
     
     # Start server
     webServer = ThreadedHTTPServer((hostName, serverPort), MyServer)
